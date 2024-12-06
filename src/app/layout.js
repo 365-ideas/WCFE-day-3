@@ -7,27 +7,22 @@ import { Root } from "./root";
 const inter = localFont({
   src: [
     {
-      path: './fonts/Inter_Regular.ttf',
-      weight: '400',
+      path: './fonts/RobotoCondensed-Light.ttf',
+      weight: '300',
       style: 'normal',
     },
     {
-      path: './fonts/Inter_ExtraBold.ttf',
-      weight: '800',
-      style: 'normal',
-    },
-    {
-      path: './fonts/Inter_Bold.ttf',
-      weight: '700',
+      path: './fonts/RobotoCondensed-Medium.ttf',
+      weight: '500',
       style: 'normal',
     }
   ],
-  variable: '--font-inter'
+  variable: '--font-roboto'
 });
 
 export const metadata = {
   title: "We'a Creating For Emotions",
-  description: "We'a Creating For Emotions | Project #",
+  description: "We'a Creating For Emotions | Project #3",
 };
 
 export default function RootLayout({ children }) {
