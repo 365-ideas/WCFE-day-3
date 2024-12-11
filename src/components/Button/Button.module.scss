@@ -1,0 +1,36 @@
+.button {
+  display: flex;
+  align-items: center;
+  gap: VW(6);
+  cursor: pointer;
+  width: fit-content;
+  position: relative;
+
+  @include hover {
+    .main_icon__rotate {
+      rotate: 180deg;
+    }
+
+    .bracket_icon {
+      &:nth-of-type(1) {
+        transform: translateX(-50%);
+      }
+      &:nth-last-of-type(1) {
+        transform: translateX(50%);
+      }
+    }
+  }
+
+  .main_icon {
+    width: VW(20);
+    height: VW(25);
+    transition: rotate 0.7s $easeInOutExpo;
+  }
+  
+  .bracket_icon {
+    display: block;
+    width: VW(8);
+    height: VW(46);
+    transition: transform 0.7s $easeInOutExpo;
+  }
+}

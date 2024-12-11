@@ -2,12 +2,22 @@
 
 %h1 {
   font-family: var(--font-roboto), sans-serif;
-  font-size: VW(60);
+  font-size: VW(54);
   font-style: normal;
   font-weight: 500;
   line-height: 142%;
   text-transform: uppercase;
-  letter-spacing: normal;
+  letter-spacing: VW(-2);
+}
+
+%h2 {
+  font-family: var(--font-roboto), sans-serif;
+  font-size: VW(22);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 142%;
+  text-transform: uppercase;
+  letter-spacing: VW(-1);
 }
 
 %body-text {
@@ -21,11 +31,6 @@
   text-transform: uppercase
 }
 
-%link {
-  @extend %body-text;
-  font-weight: bold;
-}
-
 .bold {
   font-weight: 500;
 }
@@ -36,8 +41,8 @@
   h1 {
     @extend %h1;
   }
-
-  a {
-    @extend %link;
+  
+  h2 {
+    @extend %h2;
   }
 }

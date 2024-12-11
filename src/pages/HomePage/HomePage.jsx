@@ -1,55 +1,56 @@
+"use client";
+
 import { Logo, LogoSmall } from "@/components/Logo/Logo";
-import React from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import s from "./HomePage.module.scss";
 import Image from "next/image";
-import clsx from "clsx";
+import Paragraph from "../Paragraph/Paragraph";
+import { LoaderContext } from "@/providers/LoaderProvider/LoaderProvider";
+import { motion, useAnimation, useMotionValue, useSpring } from "framer-motion";
+import { presenceAnim, WordsAnim } from "@/helpers/anim";
+import { ease } from "@/helpers/ease";
+import { Button } from "@/components/Button/Button";
+import { Menu } from "@/components/Menu/Menu";
 
 export default function HomePage() {
+  const { loaderFinished } = useContext(LoaderContext);
+
   return (
     <div className={s.home}>
       <div className={`${s.row} ${s.grid}`}>
-        <p className="bold">Late Latin word</p>
-        <p>
-          to an ancient Roman coin used
-          <br />
-          in the Byzantine Empire.
-        </p>
+        <div className="bold">
+          <Paragraph text="Late Latin word" />
+        </div>
+        <div>
+          <Paragraph text="to an ancient Roman coin used" />
+          <Paragraph text="in the Byzantine Empire." index={1} />
+        </div>
         <p></p>
-        <p className="bold">Empire</p>
-        <span className={s.row__button}>
-          <Button rotateAnim>
-            <svg
-              viewBox="0 0 20 25"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M19.6406 9.96094V14.0391H9.95281H0V9.96094H19.6406ZM11.9297 0V24.8438H7.78125V0H11.9297Z"
-                fill="black"
-              />
-              <path
-                d="M19.6406 9.96094V14.0391H9.95281H0V9.96094H19.6406ZM11.9297 0V24.8438H7.78125V0H11.9297Z"
-                fill="black"
-              />
-            </svg>
-          </Button>
-        </span>
+        <div className="bold">
+          <Paragraph text="Empire" />
+        </div>
+        <div className={s.row__button}>
+          <Menu />
+        </div>
       </div>
       <div className={`${s.row} ${s.grid}`}>
-        <p className="bold"></p>
-        <p>Byzantine Empire</p>
         <p></p>
-        <p className="bold">one having pay</p>
-        <p>
-          meaning shilling's worth or
-          <br />
-          wage, from sou or soud, shilling.
-          <br />
-          The word
-        </p>
+        <Paragraph text="Byzantine Empire" />
+        <p></p>
+        <div className="bold">
+          <Paragraph text="one having pay" />
+        </div>
+        <div>
+          <Paragraph text="meaning shilling's worth or" />
+          <Paragraph text="wage, from sou or soud, shilling." index={1} />
+          <Paragraph text="The word" index={2} />
+        </div>
       </div>
       <div className={`${s.grid}`}>
-        <Button>
+        <Button
+          {...presenceAnim(WordsAnim, loaderFinished)}
+          custom={{ id: 4, duration: 1 }}
+        >
           <svg
             viewBox="0 0 24 35"
             fill="none"
@@ -64,26 +65,31 @@ export default function HomePage() {
 
         <Background />
         <p></p>
-        <p>is also related to the Medieval Latin soldarius</p>
+        <Paragraph text="is also related to the Medieval Latin soldarius" />
       </div>
       <div className={`${s.row} ${s.row__bottom} ${s.grid}`}>
-        <LogoSmall className={s.logo} />
-        <p>
-          The word soldier
-          <br />
-          derives from the Middle
-          <br />
-          English word soudeour, from
-        </p>
-        <p>
-          platforms
-          <br />
-          resolutionsand
-        </p>
+        <LogoSmall
+          className={s.logo}
+          {...presenceAnim(WordsAnim, loaderFinished)}
+          custom={{ id: 5, duration: 1 }}
+        />
+        <div>
+          <Paragraph text="The word soldier" />
+          <Paragraph text="derives from the Middle" index={1} />
+          <Paragraph text="English word soudeour, from" index={2} />
+        </div>
+        <div>
+          <Paragraph text="platforms" />
+          <Paragraph text="resolutionsand" index={1} />
+        </div>
         <p></p>
         <div className={s.row__element}>
-          <p>World War II</p>
-          <Button>
+          {/* <p>World War II</p> */}
+          <Paragraph text="World War II" />
+          <Button
+            {...presenceAnim(WordsAnim, loaderFinished)}
+            custom={{ id: 5, duration: 1 }}
+          >
             <svg
               width="22"
               height="29"
@@ -103,36 +109,67 @@ export default function HomePage() {
   );
 }
 
-const Button = ({ children, rotateAnim }) => {
-  return (
-    <div className={s.button}>
-      <span className={s.bracket_icon}>
-        <svg viewBox="0 0 8 47" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M7.80469 42.75L7.80469 46.3125L0 46.3125L2.02438e-06 23.1562L4.04877e-06 -6.82307e-07L7.80469 0L7.80469 3.5625L4.14844 3.5625L4.14844 42.75L7.80469 42.75Z"
-            fill="black"
-          />
-        </svg>
-      </span>
-      <span className={clsx(s.main_icon, {
-        [s.main_icon__rotate]: rotateAnim
-      })}>{children}</span>
-      <span className={s.bracket_icon}>
-        <svg viewBox="0 0 8 47" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M0 3.5625V0H7.80469V23.1562V46.3125H0V42.75H3.65625V3.5625H0Z"
-            fill="black"
-          />
-        </svg>
-      </span>
-    </div>
-  );
-};
-
 const Background = () => {
+  const { loaderFinished, setLoaderFinished } = useContext(LoaderContext);
+  const bgRef = useRef();
+  const animate = useAnimation();
+
+  const mouseRef = useRef();
+
+  const positionX = useMotionValue(0);
+  const positionY = useMotionValue(0);
+
+  // Spring physics for mouse movement
+  const springConfig = { damping: 180, stiffness: 1500, mass: 0.1 };
+
+  // Mouse movement transforms
+  const plane1X = useSpring(positionX, springConfig);
+  const plane1Y = useSpring(positionY, springConfig);
+
+  const handleMouseMove = (event) => {
+    const speed = 0.05;
+    positionX.set(positionX.get() + event.movementX * speed);
+    positionY.set(positionY.get() + event.movementY * speed);
+  };
+
+  const handleMouseLeave = () => {
+    const speed = 0.05;
+    positionX.set(0 + positionX.get() * speed);
+    positionY.set(0 + positionY.get() * speed);
+  };
+
+  useEffect(() => {
+    animate.set({ clipPath: "inset(0% 100% 0% 0%)" });
+    animate.start({
+      clipPath: "inset(0% 0% 0% 0%)",
+      transition: {
+        duration: 1.3,
+        delay: 1,
+        ease: ease.inOutCirc,
+      },
+    });
+
+    setTimeout(() => {
+      setLoaderFinished(true);
+    }, 600);
+  }, [bgRef]);
+
   return (
-    <div className={s.background}>
-      <Image src="/images/background.jpg" fill alt="" />
-    </div>
+    <motion.div className={s.background} ref={bgRef} animate={animate}>
+      <span
+        className={s.background__mouse}
+        ref={mouseRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      ></span>
+      <motion.img
+        src="/images/background.jpg"
+        alt=""
+        style={{
+          y: plane1Y,
+          x: plane1X,
+        }}
+      />
+    </motion.div>
   );
 };
