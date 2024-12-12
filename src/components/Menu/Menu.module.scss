@@ -21,13 +21,45 @@
     position: relative;
   }
 
+  .list {
+    .link_wrapper {
+      display: block;
+      width: fit-content;
+    }
+  }
+
   .bottom {
     display: flex;
     justify-content: space-between;
 
     .socials {
       display: flex;
+      align-items: center;
       gap: VW(20);
+
+      .social_link {
+        position: relative;
+        line-height: normal;
+
+        @include hover {
+          &::after {
+            transform: scaleX(0);
+            transform-origin: right;
+          }
+        }
+
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: 0%;
+          width: 100%;
+          height: VW(1);
+          background-color: $c-black;
+          transform-origin: left;
+          transition: transform .5s $easeInOutExpo;
+        }
+      }
     }
   }
 }

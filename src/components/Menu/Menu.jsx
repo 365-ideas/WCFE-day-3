@@ -33,8 +33,11 @@ export const Menu = () => {
         {isActive && (
           <>
             <motion.span
-              {...anim(MenuAnim.opacityPresence({animateDelay: 0, exitDelay: 0.55}))}
+              {...anim(
+                MenuAnim.opacityPresence({ animateDelay: 0, exitDelay: 0.55 })
+              )}
               className={s.bg}
+              onClick={() => setIsActive(false)}
             />
             <motion.div {...anim(MenuAnim.presenceMenu)} className={s.menu}>
               <LogoSmall
@@ -50,12 +53,12 @@ export const Menu = () => {
                 className={s.bottom}
                 {...anim(MenuAnim.opacityPresence({ animateDelay: 0.6 }))}
               >
-                <Link href="/">
+                <Link href="/" className="hover-anim">
                   <h2>we’recreatingforemotions@gmail.com</h2>
                 </Link>
                 <div className={s.socials}>
-                  <Link href="/">X</Link>
-                  <Link href="/">Instagram</Link>
+                  <Link href="/" className={s.social_link}>X</Link>
+                  <Link href="/" className={s.social_link}>Instagram</Link>
                 </div>
               </motion.div>
             </motion.div>
@@ -103,12 +106,36 @@ const Button = ({ children, isActive, ...rest }) => {
 };
 
 const LinkAnim = ({ currLink, id }) => {
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  const getOpacityForChar = (charIndex) => {
+    if (hoveredIndex === null) return 1;
+
+    if (charIndex === hoveredIndex) return 0.3;
+    if (charIndex === hoveredIndex - 1 || charIndex === hoveredIndex + 1)
+      return 0.7;
+
+    return 1;
+  };
+
   return (
-    <Link href={currLink.link}>
+    <Link href={currLink.link} className={s.link_wrapper}>
       <h1>
         {currLink.text.split("").map((char, i) => (
-          <motion.span {...anim(MenuAnim.link)} custom={i + id} key={i}>
-            {char}
+          <motion.span
+            custom={i + id}
+            key={i}
+            className={s.link}
+            style={{
+              opacity: getOpacityForChar(i),
+              transition: "opacity 0.3s ease",
+            }}
+            onHoverStart={() => setHoveredIndex(i)}
+            onHoverEnd={() => setHoveredIndex(null)}
+          >
+            <motion.span {...anim(MenuAnim.link)} custom={i + id}>
+              {char}
+            </motion.span>
           </motion.span>
         ))}
       </h1>
