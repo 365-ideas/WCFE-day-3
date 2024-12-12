@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import s from "./Menu.module.scss";
 import Link from "next/link";
 import { LogoSmall } from "../Logo/Logo";
 import clsx from "clsx";
-import { anim, MenuAnim } from "@/helpers/anim";
+import { anim, MenuAnim, presenceAnim, WordsAnim } from "@/helpers/anim";
+import { LoaderContext } from "@/providers/LoaderProvider/LoaderProvider";
 
 const MenuList = [
   {
@@ -24,10 +25,16 @@ const MenuList = [
 
 export const Menu = () => {
   const [isActive, setIsActive] = useState(false);
+  const { loaderFinished } = useContext(LoaderContext);
 
   return (
     <>
-      <Button isActive={isActive} onClick={() => setIsActive(!isActive)} />
+      <Button
+        isActive={isActive}
+        onClick={() => setIsActive(!isActive)}
+        {...presenceAnim(WordsAnim, loaderFinished)}
+        custom={{ id: 5, duration: 1 }}
+      />
 
       <AnimatePresence mode="wait">
         {isActive && (
@@ -57,8 +64,12 @@ export const Menu = () => {
                   <h2>we’recreatingforemotions@gmail.com</h2>
                 </Link>
                 <div className={s.socials}>
-                  <Link href="/" className={s.social_link}>X</Link>
-                  <Link href="/" className={s.social_link}>Instagram</Link>
+                  <Link href="/" className={s.social_link}>
+                    X
+                  </Link>
+                  <Link href="/" className={s.social_link}>
+                    Instagram
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>
